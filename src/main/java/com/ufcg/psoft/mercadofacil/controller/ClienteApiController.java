@@ -19,7 +19,7 @@ import com.ufcg.psoft.mercadofacil.service.ClienteService;
 public class ClienteApiController {
 
 	@Autowired
-	ClienteService clienteService;
+	private ClienteService clienteService;
 	
 	@GetMapping(value = "/clientes")
 	public List<Cliente> listarClientes() {
@@ -46,6 +46,7 @@ public class ClienteApiController {
 	}
 
 	@DeleteMapping(value = "/cliente/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void removerCliente(@PathVariable("id") long id) {
 		clienteService.removerClienteCadastrado(id);
 	}

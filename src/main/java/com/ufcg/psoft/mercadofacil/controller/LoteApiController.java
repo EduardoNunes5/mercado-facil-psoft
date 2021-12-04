@@ -5,12 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ufcg.psoft.mercadofacil.model.Lote;
 import com.ufcg.psoft.mercadofacil.service.LoteService;
@@ -22,23 +17,20 @@ import com.ufcg.psoft.mercadofacil.service.ProdutoService;
 public class LoteApiController {
 
 	@Autowired
-	LoteService loteService;
-	
-	@Autowired
-	ProdutoService produtoService;
-	
-	@RequestMapping(value = "/lotes", method = RequestMethod.GET)
-	public ResponseEntity<?> listarLotes() {
+	private LoteService loteService;
+
+	@GetMapping(value = "/lotes")
+	public List<Lote> listarLotes() {
 		
 		List<Lote> lotes = loteService.listarLotes();
 
-		return new ResponseEntity<List<Lote>>(lotes, HttpStatus.OK);
+		return lotes;
 	}
 	
-	@RequestMapping(value = "/produto/{idProduto}/lote/", method = RequestMethod.POST)
-	public ResponseEntity<?> criarLote(@PathVariable("idProduto") long id, @RequestBody int numItens) {
-		Lote lote = loteService.criaLote(numItens, id);
+	@PostMapping(value = "/produto/{idProduto}/lote/")
+	@ResponseStatus(HttpStatus.CREATED)
+	public Lote criarLote(@PathVariable("idProduto") long id, @RequestBody int numItens) {
 
-		return new ResponseEntity<>(lote, HttpStatus.CREATED);
+		return loteService.criaLote(numItens, id);
 	}
 }

@@ -6,12 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ufcg.psoft.mercadofacil.DTO.ProdutoDTO;
 import com.ufcg.psoft.mercadofacil.model.Produto;
@@ -23,45 +18,36 @@ import com.ufcg.psoft.mercadofacil.service.ProdutoService;
 public class ProdutoApiController {
 
 	@Autowired
-	ProdutoService produtoService;
+	private ProdutoService produtoService;
 	
-	@RequestMapping(value = "/produtos", method = RequestMethod.GET)
-	public ResponseEntity<?> listarProdutos() {
+	@GetMapping(value = "/produtos")
+	public List<Produto> listarProdutos() {
 
-		List<Produto> produtos = produtoService.listarProdutos();
-
-		return new ResponseEntity<List<Produto>>(produtos, HttpStatus.OK);
+		return produtoService.listarProdutos();
 	}
 	
-	@RequestMapping(value = "/produto/", method = RequestMethod.POST)
-	public ResponseEntity<?> criarProduto(@RequestBody ProdutoDTO produtoDTO) {
+	@PostMapping(value = "/produto/")
+	@ResponseStatus(HttpStatus.CREATED)
+	public Produto criarProduto(@RequestBody ProdutoDTO produtoDTO) {
 
-		Produto produto = produtoService.criaProduto(produtoDTO);
-
-		return new ResponseEntity<Produto>(produto, HttpStatus.CREATED);
+		return produtoService.criaProduto(produtoDTO);
 	}
 
-	@RequestMapping(value = "/produto/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> consultarProduto(@PathVariable("id") long id) {
+	@GetMapping(value = "/produto/{id}")
+	public Produto consultarProduto(@PathVariable("id") long id) {
 
-		Optional<Produto> optionalProduto = produtoService.getProdutoById(id);
-
-		return new ResponseEntity<Produto>(optionalProduto.get(), HttpStatus.OK);
+		return produtoService.getProdutoById(id).get();
 	}
 	
-	@RequestMapping(value = "/produto/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> atualizarProduto(@PathVariable("id") long id, @RequestBody ProdutoDTO produtoDTO) {
+	@PutMapping(value = "/produto/{id}")
+	public Produto atualizarProduto(@PathVariable("id") long id, @RequestBody ProdutoDTO produtoDTO) {
 
-		Produto produto = produtoService.atualizaProduto(produtoDTO, id);
-
-		return new ResponseEntity<Produto>(produto, HttpStatus.OK);
+		return produtoService.atualizaProduto(produtoDTO, id);
 	}
 
-	@RequestMapping(value = "/produto/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> removerProduto(@PathVariable("id") long id) {
+	@DeleteMapping(value = "/produto/{id}")
+	public void removerProduto(@PathVariable("id") long id) {
 
 		produtoService.removerProdutoCadastrado(id);
-
-		return new ResponseEntity<Produto>(HttpStatus.OK);
 	}
 }
