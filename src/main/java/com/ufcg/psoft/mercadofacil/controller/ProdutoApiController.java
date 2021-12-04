@@ -46,6 +46,7 @@ public class ProdutoApiController {
 	}
 
 	@DeleteMapping(value = "/produto/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void removerProduto(@PathVariable("id") long id) {
 
 		produtoService.removerProdutoCadastrado(id);
